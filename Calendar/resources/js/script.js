@@ -1,4 +1,3 @@
-
 const Event_Map = new Map();
 let toDelete = [];
 
@@ -58,6 +57,7 @@ function saveEvent() {
 function clearEvent() {
     let form = document.getElementById("Event_Form");
     form.reset();
+    updateLocationOptions(document.getElementById("Event_Modality").value);
 
 }
 function addEventToCalender(EventDetails) {
@@ -89,8 +89,9 @@ function getInfoString(EventDetails) {
     let location = EventDetails.location;
     let remote_url = EventDetails.remote_url;
     let attendees = EventDetails.attendees;
+    let modality = EventDetails.modality;
 
-    if (location == "") {
+    if (modality == "Remote") {
         location = remote_url;
     }
     let Info_String = `<span style = "font-weight:bold">Event Name:</span><br>
@@ -155,12 +156,15 @@ function updateSavedEvent(Event_ID) {
     document.getElementById("Event_Modality").value = Selected_Event.modality;
     if (document.getElementById("Event_Modality").value == "In-Person") {
         document.getElementById("Event_Location_In-Person_Input").value = Selected_Event.location;
+        console.log("check here");
     }
     else {
-        document.getElementById("Event_Location_Remote_Input").value = Selected_Event.location;
+        document.getElementById("Event_Location_Remote_Input").value = Selected_Event.remote_url;
+        console.log("does this run>");
     }
   
     document.getElementById("Event_Attendees").value = Selected_Event.attendees;
+     updateLocationOptions(document.getElementById("Event_Modality").value);
 
 
 
@@ -188,3 +192,4 @@ function replaceCard(Event_ID) {
 function addToMap(Event_ID, EventDetails) {
     Event_Map.set(Event_ID, EventDetails);
 }
+
