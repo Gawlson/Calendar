@@ -1,31 +1,48 @@
 const Event_Map = new Map();
 let toDelete = [];
 
-
-
 function updateLocationOptions(value) {
-
+  const remoteInput = document.getElementById('Event_Location_Remote_Input');
+  const remoteContainer = document.getElementById('Event_Location_Remote_Container');
+  const inpersonContainer = document.getElementById('Event_Location_InPerson_Container');
 
     if (value == "In-Person") {
         document.getElementById("Event_Location_InPerson_Container").style.display = "block";
         document.getElementById("Event_Location_Remote_Container").style.display = "none";
+       
+        remoteInput.disabled = true;
+    remoteInput.required = false; // keep property consistent
 
     }
     else if (value == "Remote") {
         document.getElementById("Event_Location_Remote_Container").style.display = "block";
         document.getElementById("Event_Location_InPerson_Container").style.display = "none";
+          addRequired(document.getElementById('Event_Location_Remote_Input'));
+          
+              remoteInput.disabled = false;
+    remoteInput.required = true;
 
     }
 }
 
+let removeRequired = (element) => {
+   
+    element.required = false;
+}
+let addRequired = (element) => {
+    element.required = true;
+}
 
-let input = document.getElementById("Event_Location_Remote_Input");
-let inputButton = document.getElementById("Hidden_Submit");
-input.addEventListener("focusout", function () {
-    if (!input.checkValidity()) {
-        input.reportValidity();
-    }
-});
+// let input_URL = document.getElementById("Event_Location_Remote_Input");
+// let inputButton = document.getElementById("Hidden_Submit");
+
+// input_URL.addEventListener("focusout", function () {
+//     if (!input_URL.checkValidity()) {
+//         input_URL.reportValidity();
+
+//     }
+// });
+
 
 function saveEvent() {
     const EventDetails = {
@@ -53,16 +70,24 @@ function saveEvent() {
         replaceCard(toDelete.pop());
     }
     addEventToCalender(EventDetails);
+
+
 }
 function clearEvent() {
     let form = document.getElementById("Event_Form");
     form.reset();
     updateLocationOptions(document.getElementById("Event_Modality").value);
+         if( document.getElementById("Event_Form").classList.contains("was-validated")){
+    document.getElementById("Event_Form").classList.remove("was-validated")
+    }
+
 
 }
 function addEventToCalender(EventDetails) {
     let Event_Card = createEventCard(EventDetails);
     document.getElementById(EventDetails.weekday.toLowerCase()).appendChild(Event_Card);
+   
+    
 }
 function createEventCard(EventDetails) {
     let Event_Element = document.createElement('div');
@@ -156,15 +181,15 @@ function updateSavedEvent(Event_ID) {
     document.getElementById("Event_Modality").value = Selected_Event.modality;
     if (document.getElementById("Event_Modality").value == "In-Person") {
         document.getElementById("Event_Location_In-Person_Input").value = Selected_Event.location;
-        console.log("check here");
+
     }
     else {
         document.getElementById("Event_Location_Remote_Input").value = Selected_Event.remote_url;
-        console.log("does this run>");
+
     }
-  
+
     document.getElementById("Event_Attendees").value = Selected_Event.attendees;
-     updateLocationOptions(document.getElementById("Event_Modality").value);
+    updateLocationOptions(document.getElementById("Event_Modality").value);
 
 
 
