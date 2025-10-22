@@ -13,16 +13,16 @@
 
 <body>
     <script>
-    function clearEventInLine() {
-    document.getElementById("Event_Form").reset();
-    console.log("reset");
-}
-</script>
+        function clearEventInLine() {
+            document.getElementById("Event_Form").reset();
+        
+        }
+    </script>
     <div class="row">
         <div class="col-2">
             <div class="custom-container">
-                <button onclick = "clearEvent()" id ="Create_Event_Button" type="button" data-bs-toggle="modal" data-bs-target="#event_modal"
-                    class="btn btn-primary mt-3">Create Event</button>
+                <button onclick="clearEvent()" id="Create_Event_Button" type="button" data-bs-toggle="modal"
+                    data-bs-target="#event_modal" class="btn btn-primary mt-3">Create Event</button>
             </div>
         </div>
         <div class="col">
@@ -69,7 +69,7 @@
     </div>
 
     <div class="modal fade" id="event_modal" tabindex="-1">
-        <form id="Event_Form">
+        <form id="Event_Form" novalidate>
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -82,7 +82,9 @@
                             <label for="Event_Name" class="form-label">Event Name</label>
                             <div class="input-group">
 
-                                <input id="Event_Name" name = "Event_Name" type="text" class="form-control" placeholder="Event Name">
+                                <input required id="Event_Name" name="Event_Name" type="text" class="form-control"
+                                    pattern="^[a-zA-Z0-9][A-Za-z0-9\-'\., ]*" placeholder="Event Name">
+
                             </div>
                         </div>
                         <div class="mb-3">
@@ -118,7 +120,7 @@
                                 <label for="Event_Time" class="form-label">Time</label>
                                 <div class="input-group">
 
-                                    <input id="Event_Time" type="time" class="form-control" placeholder="Event Name">
+                                    <input required id="Event_Time" type="time" class="form-control" placeholder="Event Name">
                                 </div>
                             </div>
 
@@ -145,7 +147,7 @@
                                 <label for="Event_Location_Remote_Input" class="form-label">Event URL</label>
                                 <div class="input-group">
 
-                                    <input id="Event_Location_Remote_Input" type="url" pattern="^[A-z].+"
+                                    <input id="Event_Location_Remote_Input" type="text" pattern="^(https?:\/\/)?[a-zA-Z0-9]+\.[a-zA-Z]{1,}(\/?[a-zA-Z0-9]+)*$"
                                         class="form-control" placeholder="e.g. https://zoom.us/j/1234567890">
                                     <input id="Hidden_Submit" type="submit" style="visibility: hidden;">
                                 </div>
@@ -162,20 +164,49 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button onclick="saveEvent()" type="button" class="btn btn-primary" data-bs-dismiss="modal">Save
+                        <button id="submit_Button" type="button" class="btn btn-primary">Save
                             changes</button>
                     </div>
                 </div>
             </div>
-
+            <!-- onclick="saveEvent()" 
+ data-bs-dismiss="modal" -->
 
         </form>
+        <script>
+            let form = document.getElementById("Event_Form");
+            let button = document.getElementById("submit_Button");
+            button.addEventListener('click', (event) => {
+               
+                event.stopPropagation();
+                event.preventDefault();
+
+                form.classList.add("was-validated");
+                updateLocationOptions(document.getElementById("Event_Modality").value);
+                if (form.checkValidity()) {
+                   
+                    saveEvent();
+                  //  document.getElementById("submit_Button").setAttribute("data-bs-dismiss", "modal");
+                    const modalEl = document.getElementById('event_modal');
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl); // get existing instance or create one
+                    modal.hide();
+                    
+                }
+                
+                
+                
+
+            })
+
+       
+        </script>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
-    <script src="Calendar/resources/js/script.js"></script>
+    <script src="resources/js/script.js"></script>
 </body>
+
 
 </html>
